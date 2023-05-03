@@ -8,8 +8,11 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION_CODES
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NotificationHelper(base: Context?) : ContextWrapper(base) {
     private val channelID = "channelID"
@@ -49,9 +52,19 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
     // ex) status == 1 : 동작 가능한 상태 || status == 0 : 정해진 시간에 대한 동작을 이미 끝내서 더이상 동작 불가능
     // status는 상시 0으로 대기하다가, 지정된 시간이 지났을 때 1로 set된 후 이후 ID를 입력해 동작했을 때 다시 0으로 set 됨.
     fun getChannelNotification(time: String?):NotificationCompat.Builder{
+        var activity:String? = null
+
+        val calendar = Calendar.getInstance()
+        val time = SimpleDateFormat("HHmm").format(Date((calendar.timeInMillis)))
+
+            Log.v("TEST", "time : $time")
+
+            val data = MainActivity.dbHelper?.getData(null, time)
+            activity = data?.activity
+
         return NotificationCompat.Builder(applicationContext, channelID)
             //.setContentTitle(time)
-            .setContentText("약먹어라!!!!!!!!!!!!!!!")
+            .setContentText(activity)
             .setSmallIcon(R.drawable.ic_launcher_background)
     }
 }
