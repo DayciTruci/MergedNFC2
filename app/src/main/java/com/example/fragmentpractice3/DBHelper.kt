@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 
 class DBHelper(context: Context?) :
@@ -34,20 +35,40 @@ class DBHelper(context: Context?) :
         db.close()
     }
 
-    fun getData(id: String): Data {
+    fun getData(id: String?, time:String?): Data {
         val db = this.readableDatabase
+
+        Log.v("TEST", "ID : $id || TIME : $time")
+
+        var selection:String? = null
+        var selector:String? = null
+
+        if (time != null){
+            Log.v("TIME", "TIME IS NOT NULL")
+            selection = "$TIME_COLUMN=?"
+            selector = time
+        }
+
+        else{
+            Log.v("TIME", "TIME IS NULL")
+            selection = "$ID_COLUMN=?"
+            selector = id
+        }
+
+        Log.v("TEST", "SELECTION : $selection || SELECTOR : $selector")
+
         val cursor = db.query(
             TABLE_NAME,
-            arrayOf(ID_COLUMN, ACTIVITY_COLUMN, STATUS_COLUMN),
-            "$ID_COLUMN=?",
-            arrayOf(id),
+            arrayOf(ID_COLUMN, ACTIVITY_COLUMN, TIME_COLUMN, STATUS_COLUMN),
+            selection,
+            arrayOf(selector),
             null,
             null,
             null,
             null
         )
         cursor?.moveToFirst()
-        val data = Data(cursor.getString(0), cursor.getString(1), cursor.getInt(2))
+        val data = Data(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3))
         cursor.close()
         db.close()
         return data
@@ -81,7 +102,8 @@ class DBHelper(context: Context?) :
         while(cursor.moveToNext()) {
             val id = cursor.getString(cursor.getColumnIndex(ID_COLUMN))
             val activity = cursor.getString(cursor.getColumnIndex(ACTIVITY_COLUMN))
-            dataList.add(Data(id, activity, 0))
+            val time = cursor.getString(cursor.getColumnIndex(TIME_COLUMN))
+            dataList.add(Data(id, activity, time, 0))
         }
 
         cursor.close()
@@ -94,11 +116,13 @@ class DBHelper(context: Context?) :
         private const val DATABASE_NAME = "activity_db"
         private const val TABLE_NAME = "activity"
         private const val ID_COLUMN = "id"
+        private const val TIME_COLUMN = "time"
         private const val STATUS_COLUMN = "status"
         private const val ACTIVITY_COLUMN = "activity"
         private const val CREATE_TABLE = ("CREATE TABLE " + TABLE_NAME + "("
                 + ID_COLUMN + " TEXT PRIMARY KEY,"
                 + ACTIVITY_COLUMN + " TEXT,"
+                + TIME_COLUMN + " TEXT,"
                 + STATUS_COLUMN + " BOOLEAN)")
     }
 }
