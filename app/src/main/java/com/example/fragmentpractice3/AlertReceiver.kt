@@ -13,7 +13,6 @@ class AlertReceiver: BroadcastReceiver() {
 
         //메인페이지 에딧 액티비티에서 넘어온 사용자가 설정한 시간데이터를 받는다.
         var time = intent?.extras?.getString("time")
-
         var nb: NotificationCompat.Builder = notificationHelper.getChannelNotification(time)
 
         // 알람 호출

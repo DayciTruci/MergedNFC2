@@ -9,34 +9,45 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.fragmentpractice3.adapters.MainAdapter
-import com.example.fragmentpractice3.fragments.FirstFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_page_edit.*
-import kotlinx.android.synthetic.main.fragment_first.*
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
 
-    private lateinit var mAdapter : MainAdapter
     private var nfcAdapter: NfcAdapter? = null
-    private var dbHelper: DBHelper? = null
+    private var isDelete: Boolean = false
+    private var tempdata: ContentValues? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mAdapter = MainAdapter(supportFragmentManager)
-        mainViewPager.adapter = mAdapter
-        mainTabLayout.setupWithViewPager(mainViewPager)
+        // 편집 페이지로 이동
+        mainPageEdit()
+        
+        // 메인페이지에서 유저정보 클릭시 이동
+        mainPageUserInfo()
+
+        // 삭제 버튼 활성화
+        deleteBtnAct()
+
+        // dataFlush
+        dataFlush()
+
+//        mAdapter = MainAdapter(supportFragmentManager)
+//        mainViewPager.adapter = mAdapter
+//        mainTabLayout.setupWithViewPager(mainViewPager)
 
         // NFC 어댑터 가져오기
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
@@ -64,16 +75,16 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
                 insertID(id)
 
             } else {
-                if (FirstFragment.isDelete)
+                if (isDelete)
                     deleteId(id)
 
                 else {
                     Log.v("INSERTED", "INSERTED")
 
-                    val data = dbHelper!!.getData(id)
+                    val data = dbHelper!!.getData(id, null)
                     Log.v(
                         "DATA",
-                        "id : ${data.id} || act : ${data.activity} || status : ${data.status}"
+                        "id : ${data.id} || act : ${data.activity} || time : ${data.time} || status : ${data.status}"
                     )
 
                     if (data.status == 1) {
@@ -149,20 +160,11 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
         builder.setView(input)
         builder.setPositiveButton("등록") { dialog, _ ->
             val textValue = input.text.toString()
-            val db: SQLiteDatabase = dbHelper!!.writableDatabase
-            val values = ContentValues()
-            values.put("ID", id)
-            values.put("activity", textValue)
-            values.put("status", 0)
-            val newRowId = db.insert("activity", null, values)
-            if (newRowId != -1L) {
-                Toast.makeText(this@MainActivity, "등록되었습니다.", Toast.LENGTH_SHORT).show()
-                timePicker.show(supportFragmentManager, "Time Picker")
+            tempdata?.put("ID", id)
+            tempdata?.put("activity", textValue)
+            tempdata?.put("status", 0)
 
-            } else {
-                Toast.makeText(this@MainActivity, "등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
-            }
-            db.close()
+            timePicker.show(supportFragmentManager, "TIME PICKER")
             dialog.dismiss()
 
             textView.text = "${textView.text}$id : $textValue \n"
@@ -173,7 +175,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
 
     private fun deleteId(id: String) {
         try {
-            val data = Data(id, null, 0)
+            val data = Data(id, null, null, 0)
             dbHelper!!.deleteData(data)
             resetText()
             Toast.makeText(this@MainActivity, "$id 제거에 성공했습니다.", Toast.LENGTH_SHORT).show()
@@ -183,8 +185,21 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+    private fun adjTime(hour:Int, min:Int): String{
+        var adjhour = "$hour"
+        var adjmin  = "$min"
+
+        if (hour < 10)
+            adjhour = "0$hour"
+
+        if (min < 10)
+            adjmin = "0$min"
+
+        Log.v("TEST", "ADJTIME : $adjhour$adjmin")
+        return "$adjhour$adjmin"
+    }
     override fun onTimeSet(timePicker: TimePicker?, hourOfDay: Int, min: Int) {
-        var c = Calendar.getInstance()
+        val c = Calendar.getInstance()
 
         Log.v("TIMESET", "HOUR : $hourOfDay || MIN : $min")
 
@@ -195,6 +210,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
 
         // 알람설정
         startAlarm(c)
+
+        // db 전달
+        insertTime(adjTime(hourOfDay, min))
     }
 
     private fun startAlarm(c: Calendar) {
@@ -216,5 +234,55 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
             c.add(Calendar.DATE, 1)
         }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+    }
+
+        private fun insertTime(time:String){
+            val db: SQLiteDatabase = dbHelper!!.writableDatabase
+
+            tempdata?.put("time", time)
+            db.insert("activity", null, tempdata)
+            db.close()
+
+            dataFlush()
+        }
+
+        private fun dataFlush(){
+            tempdata = ContentValues()
+        }
+
+
+        fun mainPageEdit(){
+            mainPageEdit.setOnClickListener {
+                // 다른 화면으로 이동하기
+                // Intent(출발지, 도착지)
+                val myIntent = Intent(this, MainPageEditActivity::class.java)
+                startActivity(myIntent) // 출발지, 도착지 정보가담긴 myIntent를 넣어준다.
+            }
+        }
+
+        // 메인페이지 사용자정보 클릭시
+        private fun mainPageUserInfo(){
+            mainPageUserInfo.setOnClickListener {
+                // 다른 화면으로 이동하기
+                // Intent(출발지, 도착지)
+                val myIntent = Intent(this, MyInfoActivity::class.java)
+                startActivity(myIntent) // 출발지, 도착지 정보가담긴 myIntent를 넣어준다.
+            }
+        }
+
+        private fun deleteBtnAct(){
+            deleteBtn.setOnClickListener {
+                isDelete = !isDelete
+
+                if (isDelete)
+                    deleteBtn.setTextColor(Color.parseColor("#FF0000"))
+
+                else
+                    deleteBtn.setTextColor(Color.parseColor("#000000"))
+            }
+        }
+
+    companion object{
+        var dbHelper: DBHelper? = null
     }
 }

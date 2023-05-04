@@ -5,19 +5,121 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/mainTabLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/myActionBar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="70dp"
+        android:background="@color/actionbarColor"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/mainViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/mainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mind Me"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/myActionBar"
+            app:layout_constraintEnd_toEndOf="@id/myActionBar"
+            app:layout_constraintStart_toStartOf="@id/myActionBar"
+            app:layout_constraintTop_toTopOf="@id/myActionBar" />
+
+        <ImageButton
+            android:id="@+id/mainPageUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:background="@color/actionbarColor"
+            android:src="@drawable/user_36"
+            app:layout_constraintBottom_toBottomOf="@id/mainText"
+            app:layout_constraintEnd_toEndOf="@id/myActionBar"
+            app:layout_constraintTop_toTopOf="@id/mainText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/mainPageMedi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:text="약"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myActionBar" />
+
+
+    <TextView
+        android:id="@+id/mainPageEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="편집"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/mainPageMedi"
+        app:layout_constraintEnd_toEndOf="@id/mainPageLayout1" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainPageLayout1"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/main_round_box"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="@id/mainPageMedi"
+        app:layout_constraintTop_toBottomOf="@id/mainPageMedi">
+
+        <TextView
+            android:id="@+id/text1_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="asdasd"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/newAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="새 항목 추가+"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/mainPageLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/mainPageLayout1" />
+
+    <TextView
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/mainPageLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/mainPageLayout1" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/plus_main_10"
+        android:background="@color/white"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

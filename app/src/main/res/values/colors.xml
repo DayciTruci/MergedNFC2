@@ -12,4 +12,6 @@
     <color name="gray">#E0E0E0</color>
     <color name="green">#2ECC71</color>
     <color name="mainColor">#C0E6F7</color>
+    <color name="actionbarColor">#404040</color>
+    <color name="red">#FF0000</color>
 </resources>
