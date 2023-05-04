@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
     private lateinit var mAdapter : MainAdapter
     private var nfcAdapter: NfcAdapter? = null
     private var dbHelper: DBHelper? = null
+    //asd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
