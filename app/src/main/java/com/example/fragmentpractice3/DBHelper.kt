@@ -24,7 +24,8 @@ class DBHelper(context: Context?) :
         val values = ContentValues()
         values.put(ID_COLUMN, data.id)
         values.put(ACTIVITY_COLUMN, data.activity)
-        values.put(STATUS_COLUMN, 0)
+        values.put(TIME_COLUMN, data.time)
+        values.put(STATUS_COLUMN, data.status)
         db.update(TABLE_NAME, values, "$ID_COLUMN = ?", arrayOf(data.id))
         db.close()
     }
@@ -91,6 +92,25 @@ class DBHelper(context: Context?) :
         cursor.close()
         db.close()
         return check
+    }
+
+    fun getAllSpecificData(time:String): MutableList<Data>{
+        val dataList = mutableListOf<Data>()
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_NAME,
+            arrayOf(ID_COLUMN, ACTIVITY_COLUMN, TIME_COLUMN),
+            "$TIME_COLUMN=?",
+            arrayOf(time),
+            null,
+            null,
+            null,
+            null
+        )
+        while (cursor.moveToNext()){
+            dataList.add(Data(cursor.getString(0), cursor.getString(1), cursor.getString(2), 1))
+        }
+        return dataList
     }
 
     @SuppressLint("Range")

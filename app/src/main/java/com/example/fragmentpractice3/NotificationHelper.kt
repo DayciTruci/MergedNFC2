@@ -59,10 +59,17 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
 
             Log.v("TEST", "time : $time")
 
-            val data = MainActivity.dbHelper?.getData(null, time)
-            activity = data?.activity
+            for (each in MainActivity.dbHelper?.getAllSpecificData(time)!!) {
+                if (activity == null)
+                    activity = ""
 
-            Log.v("TEST", "DATA : $data")
+                MainActivity.dbHelper?.updateData(each)
+                activity += "${each.activity}, "
+            }
+
+        if (activity != null) {
+            activity = "${activity.substring(0 until (activity.length) - 2)}"
+        }
 
         return NotificationCompat.Builder(applicationContext, channelID)
             //.setContentTitle(time)
