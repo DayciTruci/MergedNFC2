@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@id/loginPageLoginButton"
         app:layout_constraintStart_toStartOf="@id/loginPageLoginButton"/>
     <Button
-        android:id="@+id/sinUp"
+        android:id="@+id/singUp"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="회원가입"
@@ -96,7 +96,7 @@
         android:text="카카오톡으로 로그인"
         android:layout_marginTop="50dp"
         android:background="@drawable/kakao_button_style"
-        app:layout_constraintTop_toBottomOf="@id/sinUp"
+        app:layout_constraintTop_toBottomOf="@id/singUp"
         app:layout_constraintStart_toStartOf="@id/loginPageLoginButton"
         app:layout_constraintEnd_toEndOf="@id/loginPageLoginButton" />
     <Button

@@ -17,6 +17,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fragmentpractice3.adapters.MainAdapter
 import com.example.fragmentpractice3.fragments.FirstFragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_page_edit.*
 import kotlinx.android.synthetic.main.fragment_first.*
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // 첫 메인화면에 관하여
+        startMainActivity()
 
         mAdapter = MainAdapter(supportFragmentManager)
         mainViewPager.adapter = mAdapter
@@ -217,5 +222,17 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener {
             c.add(Calendar.DATE, 1)
         }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+    }
+    
+    // 앱 시작시 첫 메인 화면 동작에 관하여
+    fun startMainActivity(){
+        val currentUser = Firebase.auth.currentUser
+
+        // 만약 로그인이 안되있으면
+        // 메인액티비티가 꺼지고 로그인 액티비티로 간다.
+        if(currentUser == null){
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
+        }
     }
 }
