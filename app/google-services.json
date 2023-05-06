@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1084933970353",
+    "project_id": "nfcproject-d7fd3",
+    "storage_bucket": "nfcproject-d7fd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084933970353:android:05c98cf20c3334d8500590",
+        "android_client_info": {
+          "package_name": "com.example.fragmentpractice3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084933970353-viur246peb5dkcqhmuck57crpcoqoqtg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6q-H7aoe6rmz2NL8hY0W7MelJoDttodc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084933970353-viur246peb5dkcqhmuck57crpcoqoqtg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
